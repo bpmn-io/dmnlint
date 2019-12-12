@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="Definitions_0kbsmah" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
+  <decision id="Decision" name="Decision">
+    <extensionElements>
+      <biodi:bounds x="156" y="233" width="180" height="80" />
+      <biodi:edge source="InputData">
+        <biodi:waypoints x="276" y="460" />
+        <biodi:waypoints x="247" y="313" />
+      </biodi:edge>
+      <biodi:edge source="KnowledgeSource">
+        <biodi:waypoints x="520" y="330" />
+        <biodi:waypoints x="336" y="269" />
+      </biodi:edge>
+      <biodi:edge source="BusinessKnowledgeModel">
+        <biodi:waypoints x="485" y="136" />
+        <biodi:waypoints x="316" y="233" />
+      </biodi:edge>
+      <biodi:edge source="InputData">
+        <biodi:waypoints x="282" y="460" />
+        <biodi:waypoints x="296" y="313" />
+      </biodi:edge>
+    </extensionElements>
+    <informationRequirement>
+      <requiredInput href="#InputData" />
+    </informationRequirement>
+    <informationRequirement>
+      <requiredInput href="#InputData" />
+    </informationRequirement>
+    <knowledgeRequirement>
+      <requiredKnowledge href="#BusinessKnowledgeModel" />
+    </knowledgeRequirement>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource" />
+    </authorityRequirement>
+  </decision>
+  <inputData id="InputData" name="InputData">
+    <extensionElements>
+      <biodi:bounds x="217" y="460" width="125" height="45" />
+    </extensionElements>
+  </inputData>
+  <knowledgeSource id="KnowledgeSource" name="KnowledgeSource">
+    <extensionElements>
+      <biodi:bounds x="520" y="315" width="100" height="63" />
+    </extensionElements>
+  </knowledgeSource>
+  <businessKnowledgeModel id="BusinessKnowledgeModel" name="BusinessKnowledgeModel">
+    <extensionElements>
+      <biodi:bounds x="457" y="90" width="135" height="46" />
+      <biodi:edge source="KnowledgeSource">
+        <biodi:waypoints x="572" y="315" />
+        <biodi:waypoints x="530" y="136" />
+      </biodi:edge>
+    </extensionElements>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource" />
+    </authorityRequirement>
+  </businessKnowledgeModel>
+</definitions>
