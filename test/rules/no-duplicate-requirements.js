@@ -62,6 +62,76 @@ RuleTester.verify('no-duplicate-requirements', rule, {
           message: incomingMessage
         }
       ]
+    },
+    {
+      moddleElement: readModdle(__dirname + '/no-duplicate-requirements/invalid-complex.dmn'),
+      report: [
+        {
+          category: 'error',
+          id: 'Decision_1',
+          'message': outgoingMessage
+        },
+        {
+          category: 'error',
+          id: 'BusinessKnowledgeModel_1',
+          message: incomingMessage
+        },
+        {
+          category: 'error',
+          id: 'Decision_2',
+          message: outgoingMessage
+        },
+        {
+          category: 'error',
+          id: 'Decision_1',
+          message: incomingMessage
+        },
+        {
+          category: 'error',
+          id: 'InputData_2',
+          message: incomingMessage
+        },
+        {
+          category: 'error',
+          id: 'KnowledgeSource_1',
+          message: outgoingMessage
+        },
+        {
+          category: 'error',
+          id: 'KnowledgeSource_2',
+          message: incomingMessage
+        },
+        {
+          category: 'error',
+          id: 'BusinessKnowledgeModel_2',
+          message: outgoingMessage
+        },
+        {
+          category: 'error',
+          id: 'KnowledgeSource_1',
+          message: incomingMessage
+        },
+        {
+          category: 'error',
+          id: 'KnowledgeSource_2',
+          message: outgoingMessage
+        },
+        {
+          category: 'error',
+          id: 'InputData_1',
+          message: incomingMessage
+        },
+        {
+          category: 'error',
+          id: 'BusinessKnowledgeModel_1',
+          message: outgoingMessage
+        },
+        {
+          category: 'error',
+          id: 'BusinessKnowledgeModel_2',
+          message: incomingMessage
+        }
+      ]
     }
   ]
 });

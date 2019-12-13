@@ -9,6 +9,20 @@ const requirements = [
   'dmn:KnowledgeRequirement'
 ];
 
+const requiredPropertiesMap = {
+  'dmn:AuthorityRequirement': [
+    'requiredAuthority',
+    'requiredDecision',
+    'requiredInput'
+  ],
+  'dmn:InformationRequirement': [
+    'requiredDecision',
+    'requiredInput'
+  ],
+  'dmn:KnowledgeRequirement': [
+    'requiredKnowledge'
+  ]
+};
 
 /**
  * A rule that verifies that there are no duplicated
@@ -73,11 +87,19 @@ function getRequirementSourceId(requirement) {
 
 function getRequirementTargetId(requirement) {
 
+  let requiredProperties = [];
+
   if (is(requirement, 'dmn:AuthorityRequirement')) {
-    return requirement.requiredAuthority.href.replace('#', '');
+    requiredProperties = requiredPropertiesMap['dmn:AuthorityRequirement'];
   } else if (is(requirement, 'dmn:InformationRequirement')) {
-    return requirement.requiredInput.href.replace('#', '');
+    requiredProperties = requiredPropertiesMap['dmn:InformationRequirement'];
   } else if (is(requirement, 'dmn:KnowledgeRequirement')) {
-    return requirement.requiredKnowledge.href.replace('#', '');
+    requiredProperties = requiredPropertiesMap['dmn:KnowledgeRequirement'];
+  }
+
+  for (const property of requiredProperties) {
+    if (requirement[property]) {
+      return requirement[property].href.replace('#', '');
+    }
   }
 }

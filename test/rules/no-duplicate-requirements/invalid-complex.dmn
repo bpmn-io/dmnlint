@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="Definitions_0hnaxy5" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
+  <decision id="Decision_1" name="Decision 1">
+    <extensionElements>
+      <biodi:bounds x="229" y="81" width="180" height="80" />
+      <biodi:edge source="BusinessKnowledgeModel_1">
+        <biodi:waypoints x="524" y="103" />
+        <biodi:waypoints x="409" y="113" />
+      </biodi:edge>
+      <biodi:edge source="BusinessKnowledgeModel_1">
+        <biodi:waypoints x="452" y="103" />
+        <biodi:waypoints x="337" y="113" />
+      </biodi:edge>
+    </extensionElements>
+    <knowledgeRequirement>
+      <requiredKnowledge href="#BusinessKnowledgeModel_1" />
+    </knowledgeRequirement>
+    <knowledgeRequirement>
+      <requiredKnowledge href="#BusinessKnowledgeModel_1" />
+    </knowledgeRequirement>
+    <decisionTable id="decisionTable_1">
+      <input id="input_1">
+        <inputExpression id="inputExpression_1" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output_1" typeRef="string" />
+    </decisionTable>
+  </decision>
+  <decision id="Decision_2" name="Decision 2">
+    <extensionElements>
+      <biodi:bounds x="156" y="337" width="180" height="80" />
+      <biodi:edge source="Decision_1">
+        <biodi:waypoints x="308" y="161" />
+        <biodi:waypoints x="258" y="337" />
+      </biodi:edge>
+      <biodi:edge source="Decision_1">
+        <biodi:waypoints x="236" y="161" />
+        <biodi:waypoints x="186" y="337" />
+      </biodi:edge>
+      <biodi:edge source="InputData_2">
+        <biodi:waypoints x="515" y="539" />
+        <biodi:waypoints x="317" y="417" />
+      </biodi:edge>
+      <biodi:edge source="InputData_2">
+        <biodi:waypoints x="443" y="539" />
+        <biodi:waypoints x="245" y="417" />
+      </biodi:edge>
+    </extensionElements>
+    <informationRequirement>
+      <requiredDecision href="#Decision_1" />
+    </informationRequirement>
+    <informationRequirement>
+      <requiredDecision href="#Decision_1" />
+    </informationRequirement>
+    <informationRequirement>
+      <requiredInput href="#InputData_2" />
+    </informationRequirement>
+    <informationRequirement>
+      <requiredInput href="#InputData_2" />
+    </informationRequirement>
+  </decision>
+  <inputData id="InputData_1" name="Input 1">
+    <extensionElements>
+      <biodi:bounds x="759" y="502" width="125" height="45" />
+    </extensionElements>
+  </inputData>
+  <knowledgeSource id="KnowledgeSource_1" name="Knowledge Source 1">
+    <extensionElements>
+      <biodi:bounds x="909" y="205" width="100" height="63" />
+      <biodi:edge source="Decision_1">
+        <biodi:waypoints x="409" y="140" />
+        <biodi:waypoints x="909" y="248" />
+      </biodi:edge>
+      <biodi:edge source="Decision_1">
+        <biodi:waypoints x="337" y="140" />
+        <biodi:waypoints x="837" y="248" />
+      </biodi:edge>
+      <biodi:edge source="KnowledgeSource_2">
+        <biodi:waypoints x="987" y="362" />
+        <biodi:waypoints x="942" y="268" />
+      </biodi:edge>
+      <biodi:edge source="KnowledgeSource_2">
+        <biodi:waypoints x="915" y="362" />
+        <biodi:waypoints x="870" y="268" />
+      </biodi:edge>
+    </extensionElements>
+    <authorityRequirement>
+      <requiredDecision href="#Decision_1" />
+    </authorityRequirement>
+    <authorityRequirement>
+      <requiredDecision href="#Decision_1" />
+    </authorityRequirement>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource_2" />
+    </authorityRequirement>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource_2" />
+    </authorityRequirement>
+  </knowledgeSource>
+  <businessKnowledgeModel id="BusinessKnowledgeModel_2" name="Business Knowledge Model 2">
+    <extensionElements>
+      <biodi:bounds x="743" y="56" width="135" height="46" />
+      <biodi:edge source="KnowledgeSource_1">
+        <biodi:waypoints x="969" y="205" />
+        <biodi:waypoints x="840" y="102" />
+      </biodi:edge>
+      <biodi:edge source="KnowledgeSource_1">
+        <biodi:waypoints x="897" y="205" />
+        <biodi:waypoints x="768" y="102" />
+      </biodi:edge>
+    </extensionElements>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource_1" />
+    </authorityRequirement>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource_1" />
+    </authorityRequirement>
+  </businessKnowledgeModel>
+  <inputData id="InputData_2" name="Input 2">
+    <extensionElements>
+      <biodi:bounds x="489" y="539" width="125" height="45" />
+    </extensionElements>
+  </inputData>
+  <knowledgeSource id="KnowledgeSource_2" name="Knowledge Source 2">
+    <extensionElements>
+      <biodi:bounds x="953" y="362" width="100" height="63" />
+      <biodi:edge source="InputData_1">
+        <biodi:waypoints x="853" y="502" />
+        <biodi:waypoints x="958" y="425" />
+      </biodi:edge>
+      <biodi:edge source="InputData_1">
+        <biodi:waypoints x="781" y="502" />
+        <biodi:waypoints x="886" y="425" />
+      </biodi:edge>
+    </extensionElements>
+    <authorityRequirement>
+      <requiredInput href="#InputData_1" />
+    </authorityRequirement>
+    <authorityRequirement>
+      <requiredInput href="#InputData_1" />
+    </authorityRequirement>
+  </knowledgeSource>
+  <businessKnowledgeModel id="BusinessKnowledgeModel_1" name="Business Knowledge Model 1">
+    <extensionElements>
+      <biodi:bounds x="524" y="60" width="135" height="46" />
+      <biodi:edge source="BusinessKnowledgeModel_2">
+        <biodi:waypoints x="743" y="76" />
+        <biodi:waypoints x="659" y="72" />
+      </biodi:edge>
+      <biodi:edge source="BusinessKnowledgeModel_2">
+        <biodi:waypoints x="671" y="76" />
+        <biodi:waypoints x="587" y="72" />
+      </biodi:edge>
+    </extensionElements>
+    <knowledgeRequirement>
+      <requiredKnowledge href="#BusinessKnowledgeModel_2" />
+    </knowledgeRequirement>
+    <knowledgeRequirement>
+      <requiredKnowledge href="#BusinessKnowledgeModel_2" />
+    </knowledgeRequirement>
+  </businessKnowledgeModel>
+</definitions>
