@@ -93,7 +93,7 @@ describe('cli', function() {
   });
 
 
-  describe.skip('should resolve plug-ins from working directory', function() {
+  describe('should resolve plug-ins from working directory', function() {
 
     before(function() {
 
@@ -111,7 +111,7 @@ describe('cli', function() {
   });
 
 
-  describe.skip('should handle namespaced packages', function() {
+  describe('should handle namespaced packages', function() {
 
     before(function() {
 
@@ -137,9 +137,9 @@ describe('cli', function() {
           stderr: EMPTY,
           stdout: `
 
-            ${diagramPath('ns/diagram-invalid.bpmn')}
-              StartEvent  error  Element has non-sense label <xxx>  test2/no-label-xxx
-              StartEvent  error  Element has non-sense label <xxx>  @ns/test/no-label-xxx
+            ${diagramPath('ns/diagram-invalid.dmn')}
+              Decision_1g4u6yn  error  Element has non-sense label <xxx>  test2/no-label-xxx
+              Decision_1g4u6yn  error  Element has non-sense label <xxx>  @ns/test/no-label-xxx
 
             ✖ 2 problems (2 errors, 0 warnings)
           `
@@ -166,8 +166,8 @@ describe('cli', function() {
           stdout: `
 
             ${diagramPath('ns/diagram-invalid.dmn')}
-              StartEvent  error  Element has non-sense label <xxx>  @ns/test/no-label-xxx
-              StartEvent  error  Element has non-sense label <xxx>  test2/no-label-xxx
+              Decision_1g4u6yn  error  Element has non-sense label <xxx>  @ns/test/no-label-xxx
+              Decision_1g4u6yn  error  Element has non-sense label <xxx>  test2/no-label-xxx
 
             ✖ 2 problems (2 errors, 0 warnings)
           `
