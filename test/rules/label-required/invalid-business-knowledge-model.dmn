@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="Definitions_0kbsmah" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
-  <businessKnowledgeModel id="Element">
-    <extensionElements>
-      <biodi:bounds x="178" y="81" width="135" height="46" />
-    </extensionElements>
-  </businessKnowledgeModel>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="Definitions_0kbsmah" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
+  <businessKnowledgeModel id="Element" name="" />
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_16oznmf">
+      <dmndi:DMNShape id="DMNShape_14hqfa8" dmnElementRef="Element">
+        <dc:Bounds height="46" width="135" x="178" y="81" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
 </definitions>

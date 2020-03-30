@@ -25,7 +25,7 @@ describe('traverse', function() {
       traverse(root, traverseCb);
 
       // then
-      expect(nodesCount).to.eql(8);
+      expect(nodesCount).to.eql(10);
     });
 
 
@@ -34,7 +34,7 @@ describe('traverse', function() {
       const xmlStr = `
         <?xml version="1.0" encoding="UTF-8"?>
         <definitions
-            xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd"
+            xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
             id="Definitions_0nc6puk"
             targetNamespace="http://bpmn.io/bpmn">
         </definitions>
@@ -60,7 +60,7 @@ describe('traverse', function() {
       const xmlStr = `
         <?xml version="1.0" encoding="UTF-8"?>
         <definitions
-            xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd"
+            xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
             xmlns:asd="http://asd"
             id="Definitions_0nc6puk"
             targetNamespace="http://bpmn.io/bpmn">
