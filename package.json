@@ -1,7 +1,7 @@
 {
   "name": "dmnlint",
   "description": "Validate your DMN diagrams based on configurable lint rules",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "keywords": [
     "dmnlint",
