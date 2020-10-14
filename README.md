@@ -1,6 +1,6 @@
 # dmnlint
 
-[![Build Status](https://travis-ci.org/bpmn-io/dmnlint.svg?branch=master)](https://travis-ci.org/bpmn-io/dmnlint)
+[![Build Status](https://travis-ci.com/bpmn-io/dmnlint.svg?branch=master)](https://travis-ci.com/bpmn-io/dmnlint)
 
 Validate your DMN diagrams based on configurable lint rules.
 
