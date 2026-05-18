@@ -1,6 +1,7 @@
 import { execa } from 'execa';
 
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
 import stripIndent from 'strip-indent';
 
@@ -10,7 +11,7 @@ const EMPTY = '';
 
 verify.only = verifyOnly;
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 describe('cli', function() {

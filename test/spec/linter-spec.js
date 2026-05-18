@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import Linter from '../../lib/linter.js';
 
@@ -10,7 +11,7 @@ import {
 
 import { is } from 'dmnlint-utils';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 describe('linter', function() {
