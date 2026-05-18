@@ -1,8 +1,12 @@
-import testRule from '../../lib/test-rule';
+import path from 'node:path';
 
-import { expect, createRule, readModdle } from '../helper';
+import testRule from '../../lib/test-rule.js';
+
+import { expect, createRule, readModdle } from '../helper.js';
 
 import { is } from 'dmnlint-utils';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 
 describe('test-rule', function() {
@@ -15,7 +19,8 @@ describe('test-rule', function() {
     moddleRoot = result.root;
   });
 
-  it('should return reported messages', () => {
+  it('should return reported messages', function() {
+
     // given
     const expectedMessages = [
       {
@@ -33,7 +38,8 @@ describe('test-rule', function() {
   });
 
 
-  it('should empty messages', () => {
+  it('should empty messages', function() {
+
     // given
     const expectedMessages = [];
 

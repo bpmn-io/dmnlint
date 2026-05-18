@@ -1,6 +1,6 @@
-const { expect } = require('chai');
+import { expect } from 'chai';
 
-import compileConfig from '../../../lib/support/compile-config';
+import compileConfig from '../../../lib/support/compile-config.js';
 
 
 describe('support/compile-config', function() {

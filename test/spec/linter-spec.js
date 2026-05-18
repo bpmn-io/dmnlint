@@ -1,12 +1,16 @@
-import Linter from '../../lib/linter';
+import path from 'node:path';
+
+import Linter from '../../lib/linter.js';
 
 import {
   expect,
   readModdle,
   createRule
-} from '../helper';
+} from '../helper.js';
 
 import { is } from 'dmnlint-utils';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 
 describe('linter', function() {
@@ -567,6 +571,7 @@ describe('linter', function() {
           extends: 'plugin:foo/bar'
         });
       } catch (e) {
+
         // then
         expect(e.message).to.eql('unknown config <plugin:foo/bar>');
 
