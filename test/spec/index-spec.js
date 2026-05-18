@@ -4,13 +4,13 @@ import {
 
 import { createRequire } from 'node:module';
 
-import { Linter as ESLinter } from '../../lib/index.js';
+import { Linter as ESLinter } from 'dmnlint';
 
 const require = createRequire(import.meta.url);
 
 const {
   Linter
-} = require('../../lib/index.js');
+} = require('dmnlint');
 
 
 describe('index', function() {
