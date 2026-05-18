@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import RuleTester from '../../lib/testers/rule-tester.js';
 
@@ -8,7 +9,7 @@ import {
   readModdle
 } from '../../lib/testers/helper.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 const message = 'Element is missing label/name';

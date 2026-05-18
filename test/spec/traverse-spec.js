@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import traverse from '../../lib/traverse.js';
 
@@ -8,7 +9,7 @@ import {
   readModdle
 } from '../helper.js';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 describe('traverse', function() {
