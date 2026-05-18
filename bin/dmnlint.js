@@ -1,14 +1,15 @@
 #!/usr/bin/env node
-const meow = require('meow');
+const meow = require('meow').default;
 const fs = require('fs');
 const path = require('path');
+const { pathToFileURL } = require('url');
 const {
   red,
   yellow,
   underline,
   bold,
   magenta
-} = require('chalk');
+} = require('chalk').default;
 
 const { promisify } = require('util');
 
@@ -167,13 +168,14 @@ const cli = meow(
 
 `,
   {
+    importMeta: { url: pathToFileURL(__filename).href },
     flags: {
       init: {
         type: 'boolean'
       },
       config: {
         type: 'string',
-        alias: 'c'
+        shortFlag: 'c'
       }
     }
   }

@@ -1,4 +1,4 @@
-import execa from 'execa';
+import { execa } from 'execa';
 
 import path from 'path';
 
@@ -8,7 +8,9 @@ import { expect } from 'chai';
 
 const EMPTY = '';
 
-test.only = testOnly;
+verify.only = verifyOnly;
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 
 describe('cli', function() {
@@ -17,13 +19,13 @@ describe('cli', function() {
 
     this.timeout(30000);
 
-    return exec('install-local', [], __dirname + '/cli');
+    return exec('install-local', [], path.join(__dirname, 'cli'));
   });
 
 
   describe('should execute', function() {
 
-    test({
+    verify({
       cmd: [ 'dmnlint', 'diagram.dmn' ],
       expect: {
         code: 0,
@@ -33,7 +35,7 @@ describe('cli', function() {
     });
 
 
-    test({
+    verify({
       cmd: [ 'dmnlint', 'diagram-invalid.dmn' ],
       expect: {
         code: 1,
@@ -49,7 +51,7 @@ describe('cli', function() {
     });
 
 
-    test({
+    verify({
       cmd: [ 'dmnlint', 'diagram-broken.dmn' ],
       expect: {
         code: 1,
@@ -70,7 +72,7 @@ describe('cli', function() {
     it('should work with external configuration');
 
 
-    test({
+    verify({
       cmd: [ 'dmnlint', '-c', 'non-existing.json', 'diagram.dmn' ],
       expect: {
         code: 1,
@@ -80,7 +82,7 @@ describe('cli', function() {
     });
 
 
-    test({
+    verify({
       cmd: [ 'dmnlint', 'diagram.dmn' ],
       cwd: __dirname + '/cli/empty',
       expect: {
@@ -103,7 +105,7 @@ describe('cli', function() {
     });
 
 
-    test({
+    verify({
       cmd: [ 'dmnlint', 'diagram.dmn' ],
       cwd: __dirname + '/cli/child'
     });
@@ -123,13 +125,13 @@ describe('cli', function() {
 
     describe('providing rules', function() {
 
-      test({
+      verify({
         cmd: [ 'dmnlint', '-c', 'uses-rules.json', 'diagram.dmn' ],
         cwd: __dirname + '/cli/ns',
       });
 
 
-      test({
+      verify({
         cmd: [ 'dmnlint', '-c', 'uses-rules.json', 'diagram-invalid.dmn' ],
         cwd: __dirname + '/cli/ns',
         expect: {
@@ -151,13 +153,13 @@ describe('cli', function() {
 
     describe('providing configuration', function() {
 
-      test({
+      verify({
         cmd: [ 'dmnlint', '-c', 'extends.json', 'diagram.dmn' ],
         cwd: __dirname + '/cli/ns',
       });
 
 
-      test({
+      verify({
         cmd: [ 'dmnlint', '-c', 'extends.json', 'diagram-invalid.dmn' ],
         cwd: __dirname + '/cli/ns',
         expect: {
@@ -190,7 +192,7 @@ function exec(prog, args, cwd, options = {}) {
   });
 }
 
-function test(options) {
+function verify(options) {
 
   const {
     cmd,
@@ -235,8 +237,8 @@ function test(options) {
 
 }
 
-function testOnly(options) {
-  return test({
+function verifyOnly(options) {
+  return verify({
     only: true,
     ...options
   });

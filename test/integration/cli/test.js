@@ -1,4 +1,4 @@
-const execa = require('execa');
+const { execa } = require('execa');
 
 /**
  * Execute dmnlint as provided via arguments.

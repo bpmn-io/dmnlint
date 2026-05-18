@@ -1,8 +1,8 @@
-import NodeResolver from '../../../lib/resolver/node-resolver';
+import NodeResolver from '../../../lib/resolver/node-resolver.js';
 
 import {
   expect
-} from '../../helper';
+} from '../../helper.js';
 
 
 describe('resolver/node-resolver', function() {
@@ -50,6 +50,7 @@ describe('resolver/node-resolver', function() {
       try {
         await resolver.resolveRule('dmnlint', 'non-existing');
       } catch (e) {
+
         // then
         expect(e.message).to.eql('Cannot resolve rule <non-existing> from <dmnlint>');
 
@@ -81,6 +82,7 @@ describe('resolver/node-resolver', function() {
       try {
         await resolver.resolveRule('baz', 'non-existing');
       } catch (e) {
+
         // then
         expect(e.message).to.eql('Cannot resolve rule <non-existing> from <baz>');
 

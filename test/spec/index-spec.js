@@ -1,12 +1,16 @@
 import {
   expect
-} from '../helper';
+} from '../helper.js';
 
-import { Linter as ESLinter } from '../..';
+import { createRequire } from 'node:module';
+
+import { Linter as ESLinter } from '../../lib/index.js';
+
+const require = createRequire(import.meta.url);
 
 const {
   Linter
-} = require('../..');
+} = require('../../lib/index.js');
 
 
 describe('index', function() {

@@ -1,6 +1,6 @@
 import * as utils from 'dmnlint-utils';
 
-export * from '../lib/testers/helper';
+export * from '../lib/testers/helper.js';
 
 export { expect } from 'chai';
 

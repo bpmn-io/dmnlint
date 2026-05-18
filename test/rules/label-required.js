@@ -1,10 +1,14 @@
-import RuleTester from '../../lib/testers/rule-tester';
+import path from 'node:path';
 
-import rule from '../../rules/label-required';
+import RuleTester from '../../lib/testers/rule-tester.js';
+
+import rule from '../../rules/label-required.js';
 
 import {
   readModdle
-} from '../../lib/testers/helper';
+} from '../../lib/testers/helper.js';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 
 const message = 'Element is missing label/name';
