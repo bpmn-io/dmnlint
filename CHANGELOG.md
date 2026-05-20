@@ -6,6 +6,15 @@ All notable changes to [dmnlint](https://github.com/bpmn-io/dmnlint) are documen
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.0.0
+
+* `DEPS`: update to dmn-moddle@9
+* `CHORE!`: require node@24
+
+### Breaking Changes
+
+Node 24 is required to use the library. Make sure to update.
+
 ## 0.2.0
 
 * `FEAT`: migrate to DMN 1.3
