@@ -15,7 +15,7 @@ const { promisify } = require('util');
 
 const readFile = promisify(fs.readFile);
 
-const DmnModdle = require('dmn-moddle');
+const DmnModdle = require('dmn-moddle').DmnModdle;
 
 const Linter = require('../lib/linter');
 const NodeResolver = require('../lib/resolver/node-resolver');
@@ -38,24 +38,22 @@ function boldYellow(str) {
  * Reads XML form path and return moddle object
  * @param {*} sourcePath
  */
-function parseDiagram(diagramXML) {
-  return new Promise((resolve, reject) => {
-    moddle.fromXML(diagramXML, (error, moddleElement, context) => {
+async function parseDiagram(diagramXML) {
+  try {
+    const {
+      rootElement: moddleElement,
+      warnings = []
+    } = await moddle.fromXML(diagramXML);
 
-      if (error) {
-        return resolve({
-          error
-        });
-      }
-
-      const warnings = context.warnings || [];
-
-      return resolve({
-        moddleElement,
-        warnings
-      });
-    });
-  });
+    return {
+      moddleElement,
+      warnings
+    };
+  } catch (error) {
+    return {
+      error
+    };
+  }
 }
 
 const categoryMap = {

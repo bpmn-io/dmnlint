@@ -2,7 +2,7 @@ import StaticResolver from '../../../lib/resolver/static-resolver.js';
 
 import {
   expect
-} from '../../helper.js';
+} from '../../helper.mjs';
 
 
 describe('resolver/static-resolver', function() {

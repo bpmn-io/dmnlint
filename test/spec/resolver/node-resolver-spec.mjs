@@ -2,7 +2,7 @@ import NodeResolver from '../../../lib/resolver/node-resolver.js';
 
 import {
   expect
-} from '../../helper.js';
+} from '../../helper.mjs';
 
 
 describe('resolver/node-resolver', function() {

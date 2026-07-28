@@ -7,7 +7,7 @@ import {
   expect,
   readModdle,
   createRule
-} from '../helper.js';
+} from '../helper.mjs';
 
 import { is } from 'dmnlint-utils';
 
