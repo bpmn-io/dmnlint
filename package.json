@@ -55,7 +55,7 @@
     "esm": "^3.2.25",
     "execa": "^10.0.0",
     "install-local": "^4.1.0",
-    "mocha": "^11.7.5",
+    "mocha": "^11.7.6",
     "npm-run-all2": "^9.0.2",
     "nyc": "^18.0.0",
     "strip-indent": "^4.1.1"
