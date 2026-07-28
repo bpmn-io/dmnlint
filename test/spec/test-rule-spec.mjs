@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import testRule from '../../lib/test-rule.js';
 
-import { expect, createRule, readModdle } from '../helper.js';
+import { expect, createRule, readModdle } from '../helper.mjs';
 
 import { is } from 'dmnlint-utils';
 

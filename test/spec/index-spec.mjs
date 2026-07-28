@@ -1,6 +1,6 @@
 import {
   expect
-} from '../helper.js';
+} from '../helper.mjs';
 
 import { createRequire } from 'node:module';
 

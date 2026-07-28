@@ -7,7 +7,7 @@ import {
   expect,
   createModdle,
   readModdle
-} from '../helper.js';
+} from '../helper.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
