@@ -41,7 +41,7 @@
     "dmnlint": "./bin/dmnlint.js"
   },
   "dependencies": {
-    "chalk": "^5.6.2",
+    "chalk": "^6.0.0",
     "cli-table": "^0.3.11",
     "dmn-moddle": "^12.0.0",
     "dmnlint-utils": "^0.1.0",
