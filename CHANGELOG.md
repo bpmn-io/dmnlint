@@ -6,6 +6,22 @@ All notable changes to [dmnlint](https://github.com/bpmn-io/dmnlint) are documen
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.0.0
+
+* `FEAT`: support globs, `--max-warnings` and `moddleExtensions` in the CLI
+* `FEAT`: add `info` reporting category, rule `meta` and rule error reporting
+* `FEAT`: expose `dmnlint/lib/linter`, `dmnlint/lib/resolver/*`, `dmnlint/lib/support/compile-config`, `dmnlint/lib/testers/*`, `dmnlint/rules/*` and `dmnlint/config/*` via package `exports`, to support plugins and bundling
+* `CHORE`: build on top of [`@bpmn-io/lint-core`](https://github.com/bpmn-io/lint-core), shared with [`bpmnlint`](https://github.com/bpmn-io/bpmnlint)
+* `DEPS`: update to `dmn-moddle@12`
+* `DEPS`: add `@bpmn-io/lint-core@^0.1.0`
+
+### Breaking Changes
+
+* The CLI is now shared with `bpmnlint`: `--init` reports to `stdout`, a missing file path is reported via `stderr`, and the help text changed.
+* Files are resolved as globs. A path that does not exist does not fail the command anymore, it is ignored.
+* A rule that throws is reported with category `rule-error`. It does not count as an error anymore and does not fail the command.
+* `readModdle` and `createModdle` (`dmnlint/lib/testers/helper`) do not return `references` and `elementsById` as part of `context` anymore.
+
 ## 1.0.0
 
 * `DEPS`: update to dmn-moddle@9

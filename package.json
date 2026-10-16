@@ -3,7 +3,25 @@
   "description": "Validate your DMN diagrams based on configurable lint rules",
   "version": "1.0.0",
   "main": "lib/index.js",
-  "exports": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./lib/linter": "./lib/linter.js",
+    "./lib/resolver/node-resolver": "./lib/resolver/node-resolver.js",
+    "./lib/resolver/static-resolver": "./lib/resolver/static-resolver.js",
+    "./lib/support/compile-config": "./lib/support/compile-config.js",
+    "./lib/testers/rule-tester": {
+      "types": "./lib/testers/rule-tester.d.ts",
+      "default": "./lib/testers/rule-tester.js"
+    },
+    "./lib/types": {
+      "types": "./lib/types.d.ts"
+    },
+    "./lib/testers/helper": "./lib/testers/helper.js",
+    "./rules/helper": null,
+    "./rules/*": "./rules/*.js",
+    "./config/*": "./config/*.js",
+    "./package.json": "./package.json"
+  },
   "keywords": [
     "dmnlint",
     "dmn",
@@ -31,8 +49,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "all": "run-s lint test-coverage",
+    "all": "run-s lint lint:types test-coverage",
     "lint": "eslint .",
+    "lint:types": "tsc",
     "dev": "npm test -- --watch",
     "test": "mocha 'test/**/*.mjs'",
     "test-coverage": "nyc --reporter=lcov --reporter=html npm test"
@@ -41,14 +60,13 @@
     "dmnlint": "./bin/dmnlint.js"
   },
   "dependencies": {
-    "chalk": "^6.0.0",
-    "cli-table": "^0.3.11",
+    "@bpmn-io/lint-core": "^0.1.0",
     "dmn-moddle": "^12.0.0",
-    "dmnlint-utils": "^0.1.0",
-    "meow": "^14.1.0",
-    "pluralize": "^8.0.0"
+    "dmnlint-utils": "^0.1.0"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.13.3",
     "chai": "^6.2.2",
     "eslint": "^9.39.5",
     "eslint-plugin-bpmn-io": "^2.3.1",
@@ -57,6 +75,13 @@
     "mocha": "^12.0.0",
     "npm-run-all2": "^9.0.2",
     "nyc": "^18.0.0",
-    "strip-indent": "^4.1.1"
-  }
+    "strip-indent": "^4.1.1",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "bin",
+    "config",
+    "lib",
+    "rules"
+  ]
 }

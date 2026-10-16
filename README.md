@@ -1,6 +1,6 @@
 # dmnlint
 
-[![Build Status](https://travis-ci.com/bpmn-io/dmnlint.svg?branch=master)](https://travis-ci.com/bpmn-io/dmnlint)
+[![CI](https://github.com/bpmn-io/dmnlint/actions/workflows/CI.yml/badge.svg)](https://github.com/bpmn-io/dmnlint/actions/workflows/CI.yml)
 
 Validate your DMN diagrams based on configurable lint rules.
 
@@ -24,9 +24,17 @@ Validate your diagrams via the command line:
 ✖ 2 problems (2 errors, 0 warnings)
 ```
 
+Pass multiple files or a glob, and use `--max-warnings` to fail on warnings:
+
+```sh
+> dmnlint --max-warnings=0 '*.dmn'
+```
+
+Requires Node.js 24 or newer.
+
 ## Rules
 
-Our [documentation](https://github.com/bpmn-io/dmnlint/tree/master/docs/rules#rules) lists all currenty implemented rules, the [`./rules` folder](https://github.com/bpmn-io/dmnlint/tree/master/rules) contains each rules implementation.
+Our [documentation](https://github.com/bpmn-io/dmnlint/tree/main/docs/rules#rules) lists all currently implemented rules, the [`./rules` folder](https://github.com/bpmn-io/dmnlint/tree/main/rules) contains each rules implementation.
 
 Do you miss a rule that should be included? [Propose a new rule](https://github.com/bpmn-io/dmnlint/issues/new?template=NEW_RULE.md).
 
@@ -51,17 +59,39 @@ Add or customize rules using the `rules` block:
 }
 ```
 
-## Visual Feedback (TODO)
+Run `dmnlint --init` to create a default `.dmnlintrc`.
 
-Integrate the linter via [dmn-js-dmnlint](https://github.com/bpmn-io/dmn-js-dmnlint) into [dmn-js](https://github.com/bpmn-io/dmn-js) and get direct feedback during modeling.
+## Writing Custom Rules
 
-To try out visual validation, checkout the [dmnlint playground](https://github.com/bpmn-io/dmnlint-playground).
+Rules are plain functions that check elements of the diagram. Use `is` and `isAny` from [`dmnlint-utils`](https://github.com/bpmn-io/dmnlint-utils) to check the type of an element:
 
-## Writing / Consuming Custom Rules (TODO)
+```javascript
+const { is } = require('dmnlint-utils');
 
-Use the [dmnlint playground](https://github.com/bpmn-io/dmnlint-playground) to implement new rules with quick visual feedback.
+module.exports = function() {
 
-For more details on how to define and consume custom lint rules check out the [dmnlint-plugin-example](https://github.com/bpmn-io/dmnlint-plugin-example).
+  function check(node, reporter) {
+
+    if (is(node, 'Decision') && !node.name) {
+      reporter.report(node.id, 'Decision is missing a name');
+    }
+  }
+
+  return { check };
+};
+```
+
+Types without a namespace prefix are looked up in the `dmn` namespace. Test rules via `dmnlint/lib/testers/rule-tester`:
+
+```javascript
+const RuleTester = require('dmnlint/lib/testers/rule-tester');
+const { readModdle } = require('dmnlint/lib/testers/helper');
+
+RuleTester.verify('decision-name', rule, {
+  valid: [ { moddleElement: readModdle('valid.dmn') } ],
+  invalid: [ { moddleElement: readModdle('invalid.dmn'), report: { id: 'Decision_1', message: 'Decision is missing a name' } } ]
+});
+```
 
 ## Credits
 

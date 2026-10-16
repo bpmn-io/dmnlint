@@ -67,10 +67,44 @@ describe('cli', function() {
     });
 
 
-    it('should work with import warnings');
+    verify({
+      cmd: [ 'dmnlint', '--version' ],
+      expect: {
+        code: 0,
+        stderr: EMPTY,
+        stdout: /^\d+\.\d+\.\d+/
+      }
+    });
 
 
-    it('should work with external configuration');
+    verify({
+      cmd: [ 'dmnlint', 'diagram*.dmn' ],
+      expect: {
+        code: 1,
+        stderr: EMPTY,
+        stdout: /(?=[\s\S]*diagram-invalid\.dmn\n.*label-required)(?=[\s\S]*diagram-broken\.dmn\n.*Parse error)/
+      }
+    });
+
+
+    verify({
+      cmd: [ 'dmnlint', '-c', 'warn.json', 'diagram-invalid.dmn' ],
+      expect: {
+        code: 0,
+        stderr: EMPTY,
+        stdout: /Decision_1g4u6yn\s+warning\s+Element is missing label\/name\s+label-required[\s\S]*✖ 1 problem \(0 errors, 1 warning\)/
+      }
+    });
+
+
+    verify({
+      cmd: [ 'dmnlint', '--max-warnings=0', '-c', 'warn.json', 'diagram-invalid.dmn' ],
+      expect: {
+        code: 1,
+        stderr: EMPTY,
+        stdout: /✖ 1 problem \(0 errors, 1 warning\)/
+      }
+    });
 
 
     verify({

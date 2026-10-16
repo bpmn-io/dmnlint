@@ -1,860 +1,163 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
-import Linter from '../../lib/linter.js';
+import { Linter } from 'dmnlint';
+
+import NodeResolver from 'dmnlint/lib/resolver/node-resolver';
+
+import compileConfig from 'dmnlint/lib/support/compile-config';
 
 import {
   expect,
   readModdle,
-  createRule
+  stubCJS
 } from '../helper.mjs';
 
-import { is } from 'dmnlint-utils';
+const {
+  __dirname,
+  require
+} = stubCJS(import.meta.url);
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+describe('dmnlint', function() {
 
-describe('linter', function() {
+  let linter;
 
-  describe('constructor', function() {
-
-    it('should require { resolver } config', function() {
-
-      expect(() => {
-        new Linter();
-      }).to.throw('must provide <options.resolver>');
-
+  beforeEach(function() {
+    linter = new Linter({
+      resolver: new NodeResolver()
     });
-
   });
 
 
-  describe('#applyRule', function() {
+  describe('names', function() {
 
-    let moddleRoot;
+    it('should parse rule names', function() {
 
-    const linter = new Linter({
-      resolver: fakeResolver()
-    });
-
-
-    beforeEach(async function() {
-      const result = await readModdle(__dirname + '/diagram.dmn');
-
-      moddleRoot = result.root;
-    });
-
-
-    it('should succeed', function() {
-
-      // when
-      const results = linter.applyRule(
-        moddleRoot,
-        {
-          name: 'test-rule',
-          config: { },
-          rule: createRule(fakeRule),
-          category: 'error'
-        }
-      );
-
-      // then
-      expect(results).to.eql(buildResults('error'));
-    });
-
-
-    it('should fail', function() {
-
-      const failingRule = {};
-
-      // when
-      const results = linter.applyRule(
-        moddleRoot,
-        {
-          name: 'test-rule',
-          config: { },
-          rule: failingRule,
-          category: 'warn'
-        }
-      );
-
-      // then
-      expect(results).to.eql([
-        {
-          category: 'error',
-          message: 'Rule error: rule.check is not a function'
-        }
-      ]);
-    });
-
-
-  });
-
-
-  describe('#lint', function() {
-
-    let moddleRoot;
-
-    before(async function() {
-      const result = await readModdle(__dirname + '/diagram.dmn');
-
-      moddleRoot = result.root;
-    });
-
-
-    describe('config', function() {
-
-      it('should apply global config', async function() {
-
-        // given
-        const resolver = {
-          resolveRule() {
-            throw new Error('unexpected invocation');
-          }
-        };
-
-        const config = {};
-
-        const linter = new Linter({ resolver, config });
-
-        // when
-        const lintResults = await linter.lint(moddleRoot);
-
-        // then
-        expect(lintResults).to.eql({});
-      });
-
-
-      it('should apply local config', async function() {
-
-        // given
-        const resolver = {
-          resolveRule() {
-            throw new Error('unexpected invocation');
-          }
-        };
-
-        const config = {
-          rules: {
-            nonExistingRule: 'warn'
-          }
-        };
-
-        const linter = new Linter({ resolver, config });
-
-        // when
-        const lintResults = await linter.lint(moddleRoot, {});
-
-        // then
-        expect(lintResults).to.eql({});
-      });
-
-    });
-
-
-    describe('rules', function() {
-
-      it('should resolve', async function() {
-
-        // given
-        const resolver = {
-          resolveRule(pkg, ruleName) {
-            expect(pkg).to.eql('dmnlint');
-
-            expect(ruleName).to.eql('testRule');
-
-            return fakeRule;
-          }
-        };
-
-        const linter = new Linter({ resolver });
-
-        // when
-        const lintResults = await linter.lint(moddleRoot, {
-          rules: {
-            testRule: 'warn'
-          }
-        });
-
-        // then
-        expect(lintResults).to.eql({
-          testRule: buildResults('warn')
-        });
-      });
-
-
-      it('should handle unresolved', async function() {
-
-        // given
-        const resolver = {
-          resolveRule(ruleName) {
-            return null;
-          }
-        };
-
-        const linter = new Linter({ resolver });
-
-        let error;
-
-        try {
-          await linter.lint(moddleRoot, {
-            rules: {
-              unknownRule: 'warn'
-            }
-          });
-        } catch (e) {
-          error = e;
-        }
-
-        // then
-        expect(error).to.exist;
-
-        expect(error.message).to.eql('unknown rule <unknownRule>');
-      });
-
-
-      it('should not resolve disabled', async function() {
-
-        // given
-        const resolver = {
-          resolveRule(ruleName) {
-            throw new Error('unexpected resolve call');
-          }
-        };
-
-        const config = {
-          rules: {
-            unknownRule: 'off'
-          }
-        };
-
-        const linter = new Linter({ resolver, config });
-
-        // when
-        const results = await linter.lint(moddleRoot);
-
-        // then
-        expect(results).to.eql({});
-      });
-
-    });
-
-  });
-
-
-  describe('#parseRuleValue', function() {
-
-    it('should extract { category, config }', function() {
-
-      // given
-      const linter = new Linter({ resolver: fakeResolver() });
-
-
-      // then
-      expect(linter.parseRuleValue(0)).to.eql({
-        category: 'off',
-        config: {}
-      });
-
-      expect(linter.parseRuleValue([ 0, 'A' ])).to.eql({
-        category: 'off',
-        config: 'A'
-      });
-
-      expect(linter.parseRuleValue(1)).to.eql({
-        category: 'warn',
-        config: {}
-      });
-
-      expect(linter.parseRuleValue(2)).to.eql({
-        category: 'error',
-        config: {}
-      });
-
-    });
-
-  });
-
-
-  describe('#resolveConfiguredRules', function() {
-
-    describe('should resolve extended', function() {
-
-      it('single parent', async function() {
-
-        // given
-        const resolver = {
-
-          resolveRule(pkg, ruleName) {
-            expect(pkg).to.eql('dmnlint');
-
-            expect(ruleName).to.eql('foo');
-
-            return { check() { } };
-          },
-
-          resolveConfig(pkg, configName) {
-            expect(pkg).to.eql('dmnlint');
-
-            expect(configName).to.eql('recommended');
-
-            return {
-              rules: {
-                foo: 'warn'
-              }
-            };
-          }
-
-        };
-
-        const linter = new Linter({ resolver });
-
-        const config = {
-          extends: 'dmnlint:recommended'
-        };
-
-        // when
-        const rules = await linter.resolveConfiguredRules(config);
-
-        // then
-        expect(rules).to.eql({
-          'foo': 'warn'
-        });
-      });
-
-
-      describe('multiple parents', function() {
-
-        // given
-        const resolver = {
-
-          resolveRule(pkg, ruleName) {
-            return { check() { } };
-          },
-
-          resolveConfig(pkg, configName) {
-
-            if (pkg === 'dmnlint' && configName === 'recommended') {
-              return {
-                rules: {
-                  'foo': 'warn',
-                  'bar': 'warn'
-                }
-              };
-            }
-
-            if (pkg === 'dmnlint-plugin-test') {
-              if (configName === 'recommended') {
-                return {
-                  extends: 'plugin:test/base',
-                  rules: {
-                    'test/bar': 'warn',
-                    'other': 'warn'
-                  }
-                };
-              }
-
-              if (configName === 'base') {
-                return {
-                  rules: {
-                    'dmnlint/bar': 'error',
-                    'bar': 'error',
-                    'other': 'error'
-                  }
-                };
-              }
-            }
-
-            throw new Error(`unexpected config <${configName}>`);
-          }
-
-        };
-
-
-        it('should resolve extended', async function() {
-
-          // given
-          const linter = new Linter({ resolver });
-
-          const config = {
-            extends: [
-              'dmnlint:recommended',
-              'plugin:test/recommended'
-            ]
-          };
-
-          // when
-          const rules = await linter.resolveConfiguredRules(config);
-
-          // then
-          expect(rules).to.eql({
-            'bar': 'error',
-            'foo': 'warn',
-            'test/bar': 'warn',
-            'test/other': 'warn'
-          });
-        });
-
-
-        it('should normalize rule names', async function() {
-
-          // given
-          const linter = new Linter({ resolver });
-
-          const config = {
-            extends: [
-              'dmnlint:recommended',
-              'plugin:test/recommended'
-            ],
-            rules: {
-              'dmnlint/foo': 'error',
-              'foo': 'error',
-              'test/bar': 'off'
-            }
-          };
-
-          // when
-          const rules = await linter.resolveConfiguredRules(config);
-
-          // then
-          expect(rules).to.eql({
-            'bar': 'error',
-            'foo': 'error',
-            'test/bar': 'off',
-            'test/other': 'warn'
-          });
-        });
-
-      });
-
-
-      describe('scoped', function() {
-
-        // given
-        const resolver = {
-
-          resolveRule(pkg, ruleName) {
-            return { check() { } };
-          },
-
-          resolveConfig(pkg, configName) {
-
-            if (pkg === 'dmnlint-plugin-test') {
-              if (configName === 'recommended') {
-                return {
-                  rules: {
-                    '@ns/dmnlint-plugin-test/bar': 'warn'
-                  }
-                };
-              }
-            }
-
-            if (pkg === '@ns/dmnlint-plugin-test') {
-              if (configName === 'recommended') {
-                return {
-                  rules: {
-                    'bar': 'off'
-                  }
-                };
-              }
-
-              if (configName === 'other') {
-                return {
-                  rules: {
-                    'foo': 'warn'
-                  }
-                };
-              }
-            }
-
-            throw new Error(`unexpected config <${configName}>`);
-          }
-
-        };
-
-
-        it('should normalize shortcut', async function() {
-
-          // given
-          const linter = new Linter({ resolver });
-
-          const config = {
-            extends: [
-              'plugin:@ns/test/other'
-            ],
-            rules: {
-              '@ns/dmnlint-plugin-test/foo': 'error'
-            }
-          };
-
-          // when
-          const rules = await linter.resolveConfiguredRules(config);
-
-          // then
-          expect(rules).to.eql({
-            '@ns/test/foo': 'error'
-          });
-        });
-
-
-        it('should normalize full package name', async function() {
-
-          // given
-          const linter = new Linter({ resolver });
-
-          const config = {
-            extends: [
-              'plugin:@ns/dmnlint-plugin-test/other'
-            ],
-            rules: {
-              '@ns/test/foo': 'error'
-            }
-          };
-
-          // when
-          const rules = await linter.resolveConfiguredRules(config);
-
-          // then
-          expect(rules).to.eql({
-            '@ns/test/foo': 'error'
-          });
-        });
-
-
-        it('should normalize multiple', async function() {
-
-          // given
-          const linter = new Linter({ resolver });
-
-          const config = {
-            extends: [
-              'plugin:@ns/test/other',
-              'plugin:@ns/dmnlint-plugin-test/recommended',
-              'plugin:test/recommended'
-            ],
-            rules: {
-              '@ns/dmnlint-plugin-test/bar': 'off',
-              '@ns/dmnlint-plugin-test/foo': 'error'
-            }
-          };
-
-          // when
-          const rules = await linter.resolveConfiguredRules(config);
-
-          // then
-          expect(rules).to.eql({
-            '@ns/test/foo': 'error',
-            '@ns/test/bar': 'off'
-          });
-        });
-
-      });
-
-    });
-
-
-    it('should throw on missing', async function() {
-
-      // given
-      const resolver = {
-        resolveConfig(pkg, configName) {
-          return null;
-        }
-      };
-
-      const linter = new Linter({ resolver });
-
-      let err;
-
-      // when
-      try {
-        await linter.resolveConfiguredRules({
-          extends: 'plugin:foo/bar'
-        });
-      } catch (e) {
-
-        // then
-        expect(e.message).to.eql('unknown config <plugin:foo/bar>');
-
-        err = e;
-      }
-
-      // verify
-      expect(err).to.exist;
-    });
-
-  });
-
-
-  describe('#parseRuleName', function() {
-
-    const linter = new Linter({
-      resolver: fakeRule({})
-    });
-
-
-    it('should parse built-in', async function() {
-
-      // when
-      const parsed = linter.parseRuleName('dmnlint/label-required');
-
-      // then
-      expect(parsed).to.eql({
+      expect(linter.parseRuleName('label-required')).to.eql({
         pkg: 'dmnlint',
         ruleName: 'label-required'
       });
-    });
 
-
-    it('should parse built-in without prefix', async function() {
-
-      // when
-      const parsed = linter.parseRuleName('label-required');
-
-      // then
-      expect(parsed).to.eql({
+      expect(linter.parseRuleName('dmnlint/label-required')).to.eql({
         pkg: 'dmnlint',
         ruleName: 'label-required'
       });
-    });
 
-
-    it('should parse external', function() {
-
-      // when
-      const parsed = linter.parseRuleName('foo/label-required');
-
-      // then
-      expect(parsed).to.eql({
+      expect(linter.parseRuleName('foo/label-required')).to.eql({
         pkg: 'dmnlint-plugin-foo',
         ruleName: 'label-required'
       });
     });
 
 
-    it('should parse external with full package name', function() {
+    it('should parse config names', function() {
 
-      // when
-      const parsed = linter.parseRuleName('dmnlint-plugin-foo/label-required');
+      expect(linter.parseConfigName('dmnlint:recommended')).to.eql({
+        pkg: 'dmnlint',
+        configName: 'recommended'
+      });
 
-      // then
-      expect(parsed).to.eql({
+      expect(linter.parseConfigName('plugin:foo/recommended')).to.eql({
         pkg: 'dmnlint-plugin-foo',
-        ruleName: 'label-required'
+        configName: 'recommended'
       });
-    });
 
-
-    it ('should parse scoped', function() {
-
-      // when
-      const parsed = linter.parseRuleName('@scoped/dmnlint-plugin-foo/label-required');
-
-      // then
-      expect(parsed).to.eql({
-        pkg: '@scoped/dmnlint-plugin-foo',
-        ruleName: 'label-required'
-      });
-    });
-
-
-    it ('should parse scoped with full package name', function() {
-
-      // when
-      const parsed = linter.parseRuleName('@scoped/foo/label-required');
-
-      // then
-      expect(parsed).to.eql({
-        pkg: '@scoped/dmnlint-plugin-foo',
-        ruleName: 'label-required'
-      });
-    });
-
-
-    it ('should fail to parse with missing package', function() {
-
-      expect(() => {
-        linter.parseRuleName('@scoped/label-required');
-      }).to.throw('unparseable rule name <@scoped/label-required>');
-    });
-
-
-    it ('should fail to parse nonsense', function() {
-
-      expect(() => {
-        linter.parseRuleName('foo/bar/goings');
-      }).to.throw('unparseable rule name <foo/bar/goings>');
+      expect(() => linter.parseConfigName('bpmnlint:recommended')).to.throw('unparseable config name');
     });
 
   });
 
 
-  describe('#parseConfigName', function() {
+  describe('resolver', function() {
 
-    const linter = new Linter({
-      resolver: fakeRule({})
+    // resolve built-ins independent of the working directory
+    const resolver = new NodeResolver({
+      require: createRequire('/')
+    });
+
+    it('should resolve rule', function() {
+
+      expect(resolver.resolveRule('dmnlint', 'label-required')).to.equal(
+        require('dmnlint/rules/label-required')
+      );
     });
 
 
-    describe('should parse built-in', function() {
+    it('should resolve config', function() {
 
-      it('all', function() {
-
-        // when
-        const parsed = linter.parseConfigName('dmnlint:all');
-
-        // then
-        expect(parsed).to.eql({
-          pkg: 'dmnlint',
-          configName: 'all'
-        });
-      });
-
-
-      it('recommended', function() {
-
-        // when
-        const parsed = linter.parseConfigName('dmnlint:recommended');
-
-        // then
-        expect(parsed).to.eql({
-          pkg: 'dmnlint',
-          configName: 'recommended'
-        });
-      });
-
+      expect(resolver.resolveConfig('dmnlint', 'recommended')).to.equal(
+        require('dmnlint/config/recommended')
+      );
     });
 
 
-    it('should parse external', function() {
+    it('should NOT resolve bpmnlint rule', function() {
 
-      // when
-      const parsed = linter.parseConfigName('plugin:foo/bar');
-
-      // then
-      expect(parsed).to.eql({
-        pkg: 'dmnlint-plugin-foo',
-        configName: 'bar'
-      });
-    });
-
-
-    it('should parse external with full package name', function() {
-
-      // when
-      const parsed = linter.parseConfigName('plugin:dmnlint-plugin-foo/bar');
-
-      // then
-      expect(parsed).to.eql({
-        pkg: 'dmnlint-plugin-foo',
-        configName: 'bar'
-      });
-    });
-
-
-    it('should parse scoped', function() {
-      const parsed = linter.parseConfigName('plugin:@ns/foo/bar');
-
-      expect(parsed).to.eql({
-        pkg: '@ns/dmnlint-plugin-foo',
-        configName: 'bar'
-      });
-    });
-
-
-    it('should parse scoped with full package name', function() {
-      const parsed = linter.parseConfigName('plugin:@ns/dmnlint-plugin-foo/bar');
-
-      expect(parsed).to.eql({
-        pkg: '@ns/dmnlint-plugin-foo',
-        configName: 'bar'
-      });
-    });
-
-
-    it('should throw on invalid name', async function() {
-
-      expect(() => {
-        linter.parseConfigName('foo:bar');
-      }).to.throw('unparseable config name <foo:bar>');
-
-    });
-
-
-    it('should throw error on invalid scoped name', function() {
-
-      expect(() => {
-        linter.parseConfigName('plugin:@ns/not-valid');
-      }).to.throw('unparseable config name <plugin:@ns/not-valid>');
-    });
-
-
-    it('should throw error on namespaced default config', function() {
-
-      expect(() => {
-        linter.parseConfigName('dmnlint:@ns/not-valid');
-      }).to.throw('unparseable config name <dmnlint:@ns/not-valid>');
-    });
-
-
-    it('should throw error on non-sense name', function() {
-
-      expect(() => {
-        linter.parseConfigName('dmnlint:asd/not-valid/asd');
-      }).to.throw('unparseable config name <dmnlint:asd/not-valid/asd>');
+      expect(() => resolver.resolveRule('bpmnlint', 'label-required')).to.throw(
+        'cannot resolve rule <label-required> from <bpmnlint>'
+      );
     });
 
   });
 
 
-  it('caching behavior');
+  describe('linting', function() {
+
+    it('should lint with recommended config', async function() {
+
+      // given
+      const { root } = await readModdle(__dirname + '/../rules/label-required/invalid-decision.dmn');
+
+      // when
+      const results = await linter.lint(root, {
+        extends: 'dmnlint:recommended'
+      });
+
+      // then
+      expect(Object.keys(results)).to.eql([ 'label-required' ]);
+
+      expect(results['label-required']).to.have.length(1);
+      expect(results['label-required'][0]).to.include({
+        id: 'Element',
+        message: 'Element is missing label/name',
+        category: 'error'
+      });
+    });
+
+
+    it('should lint with all config', async function() {
+
+      // given
+      const { root } = await readModdle(__dirname + '/diagram.dmn');
+
+      // when
+      const results = await linter.lint(root, {
+        extends: 'dmnlint:all'
+      });
+
+      // then
+      expect(results).to.eql({});
+    });
+
+  });
+
+
+  describe('compile-config', function() {
+
+    it('should import rules from <dmnlint>', async function() {
+
+      // when
+      const code = await compileConfig({
+        extends: 'dmnlint:recommended'
+      });
+
+      // then
+      expect(code).to.contain('import rule_0 from \'dmnlint/rules/label-required\'');
+      expect(code).to.contain('cache[\'dmnlint/label-required\'] = rule_0');
+
+      expect(code).to.contain('import rule_1 from \'dmnlint/rules/no-duplicate-requirements\'');
+    });
+
+  });
 
 });
-
-
-function fakeResolver(cache = {}) {
-  return {
-    resolveRule(pkg, ruleName) {
-      return cache[`${pkg}-${ruleName}`];
-    },
-
-    resolveConfig(pkg, configName) {
-      return cache[`config-${pkg}-${configName}`];
-    }
-  };
-}
-
-
-function fakeRule() {
-
-  function check(node, reporter) {
-
-    if (is(node, 'Definitions')) {
-      reporter.report(node.id, 'Definitions detected');
-    }
-  }
-
-  return {
-    check
-  };
-}
-
-function buildResults(category) {
-  const results = [
-    {
-      id: 'Definitions_0nc6puk',
-      message: 'Definitions detected'
-    }
-  ];
-
-  if (typeof category === 'undefined') {
-    return results;
-  }
-
-  return results.map((result) => {
-    return {
-      ...result,
-      category
-    };
-  });
-}
