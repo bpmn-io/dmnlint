@@ -27,12 +27,10 @@ RuleTester.verify('no-duplicate-requirements', rule, {
       moddleElement: readModdle(__dirname + '/no-duplicate-requirements/invalid-authority-requirement.dmn'),
       report: [
         {
-          category: 'error',
           id: 'Decision',
           'message': outgoingMessage
         },
         {
-          category: 'error',
           id: 'KnowledgeSource',
           message: incomingMessage
         }
@@ -42,12 +40,10 @@ RuleTester.verify('no-duplicate-requirements', rule, {
       moddleElement: readModdle(__dirname + '/no-duplicate-requirements/invalid-information-requirement.dmn'),
       report: [
         {
-          category: 'error',
           id: 'Decision',
           'message': outgoingMessage
         },
         {
-          category: 'error',
           id: 'InputData',
           message: incomingMessage
         }
@@ -57,12 +53,10 @@ RuleTester.verify('no-duplicate-requirements', rule, {
       moddleElement: readModdle(__dirname + '/no-duplicate-requirements/invalid-knowledge-requirement.dmn'),
       report: [
         {
-          category: 'error',
           id: 'Decision',
           'message': outgoingMessage
         },
         {
-          category: 'error',
           id: 'BusinessKnowledgeModel',
           message: incomingMessage
         }
@@ -72,67 +66,54 @@ RuleTester.verify('no-duplicate-requirements', rule, {
       moddleElement: readModdle(__dirname + '/no-duplicate-requirements/invalid-complex.dmn'),
       report: [
         {
-          category: 'error',
           id: 'Decision_1',
           'message': outgoingMessage
         },
         {
-          category: 'error',
           id: 'BusinessKnowledgeModel_1',
           message: incomingMessage
         },
         {
-          category: 'error',
           id: 'Decision_2',
           message: outgoingMessage
         },
         {
-          category: 'error',
           id: 'Decision_1',
           message: incomingMessage
         },
         {
-          category: 'error',
           id: 'InputData_2',
           message: incomingMessage
         },
         {
-          category: 'error',
           id: 'KnowledgeSource_1',
           message: outgoingMessage
         },
         {
-          category: 'error',
           id: 'KnowledgeSource_2',
           message: incomingMessage
         },
         {
-          category: 'error',
           id: 'BusinessKnowledgeModel_2',
           message: outgoingMessage
         },
         {
-          category: 'error',
           id: 'KnowledgeSource_1',
           message: incomingMessage
         },
         {
-          category: 'error',
           id: 'KnowledgeSource_2',
           message: outgoingMessage
         },
         {
-          category: 'error',
           id: 'InputData_1',
           message: incomingMessage
         },
         {
-          category: 'error',
           id: 'BusinessKnowledgeModel_1',
           message: outgoingMessage
         },
         {
-          category: 'error',
           id: 'BusinessKnowledgeModel_2',
           message: incomingMessage
         }
